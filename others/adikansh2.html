@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adikansh - A New Beginning</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ivory: #FFF8F6;
+    --blush: #F9E6EA;
+    --petal: #F4D7DC;
+    --berry: #8B3550;
+    --muted: #5b3b3f;
+    --gold: #D8B08A;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%; margin:0; font-family:"Poppins",sans-serif; background:linear-gradient(180deg,var(--ivory) 0%, #fff 100%); color:var(--muted); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+
+  /* Watermark */
+  .watermark{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+    z-index:0;
+    font-family:"Playfair Display",serif;
+    font-size:10vw;
+    color:rgba(139,53,80,0.06); /* subtle */
+    letter-spacing:8px;
+  }
+
+  /* App container */
+  .wrapper{
+    max-width:1100px;
+    margin:36px auto;
+    position:relative;
+    z-index:2;
+    padding:28px;
+  }
+
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+  }
+  header .title{
+    display:flex;
+    gap:12px;
+    align-items:baseline;
+  }
+  header h1{
+    margin:0;
+    font-family:"Playfair Display", serif;
+    color:var(--berry);
+    font-size:28px;
+    letter-spacing:0.6px;
+  }
+  header p{
+    margin:0;
+    color:var(--muted);
+    opacity:0.85;
+    font-size:14px;
+  }
+
+  /* Card view */
+  .card {
+    display:flex;
+    gap:36px;
+    align-items:center;
+    background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(249,230,234,0.6));
+    border-radius:18px;
+    box-shadow:0 18px 40px rgba(139,53,80,0.08);
+    overflow:hidden;
+    min-height:520px;
+    border:1px solid rgba(139,53,80,0.06);
+  }
+
+  /* Left: image */
+  .card .media{
+    flex:0 0 48%;
+    height:520px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card .media img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transform:scale(1);
+    transition:transform .8s ease;
+  }
+  .card .media:hover img{ transform:scale(1.04); }
+
+  /* Right: text */
+  .card .content{
+    flex:1;
+    padding:44px 44px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:18px;
+  }
+
+  .promise-number{
+    font-family:"Playfair Display",serif;
+    color:var(--gold);
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:1px;
+  }
+
+  .promise-title{
+    font-family:"Playfair Display",serif;
+    color:var(--berry);
+    font-size:28px;
+    margin:0;
+    line-height:1.05;
+  }
+
+  .promise-desc{
+    font-size:16px;
+    color:var(--muted);
+    line-height:1.8;
+    margin:0;
+    max-width:520px;
+    font-weight:500;
+  }
+
+  .small-note{
+    font-size:14px;
+    color:var(--muted);
+    opacity:0.85;
+  }
+
+  /* Controls */
+  .controls{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:20px;
+  }
+  .controls .nav{
+    display:flex;
+    gap:12px;
+  }
+
+  button.btn{
+    background:var(--berry);
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:999px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(139,53,80,0.12);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  button.btn:active{ transform:translateY(1px); }
+  button.btn.ghost{
+    background:transparent;
+    color:var(--berry);
+    border:2px solid rgba(139,53,80,0.08);
+    box-shadow:none;
+  }
+
+  .progress{
+    margin-left:auto;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:var(--muted);
+    font-weight:600;
+    letter-spacing:0.6px;
+    font-size:14px;
+  }
+
+  /* page indicator dots */
+  .dots{
+    display:flex;
+    gap:6px;
+    align-items:center;
+  }
+  .dot{
+    width:8px; height:8px; border-radius:8px;
+    background:rgba(139,53,80,0.12);
+  }
+  .dot.active{ background:var(--berry); transform:scale(1.2); }
+
+  /* final message */
+  .final {
+    padding:48px;
+    text-align:center;
+  }
+  .final h2{ font-family:"Playfair Display",serif; color:var(--berry); font-size:36px; margin-bottom:10px;}
+  .final p{ color:var(--muted); max-width:900px; margin: 0 auto; font-size:18px; line-height:1.9; }
+
+  /* responsive for smaller screens */
+  @media (max-width:980px){
+    .card{ flex-direction:column; min-height:auto; }
+    .card .media{ width:100%; flex-basis:250px; height:280px; }
+    .card .content{ padding:28px; }
+  }
+
+  /* subtle page transitions */
+  .page-enter{ opacity:0; transform:translateY(18px); transition:all .45s cubic-bezier(.2,.9,.3,1); }
+  .page-enter.page-enter-active{ opacity:1; transform:translateY(0); }
+  .page-exit{ opacity:1;}
+  .page-exit.page-exit-active{ opacity:0; transform:translateY(-18px); transition:all .35s ease; }
+
+  footer{
+    text-align:center;
+    margin-top:28px;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  /* small decorative flourish */
+  .hearts {
+    display:inline-block;
+    transform:translateY(2px);
+    margin-left:6px;
+    color:var(--gold);
+  }
+</style>
+</head>
+<body>
+
+  <!-- Watermark on every screen -->
+  <div class="watermark">ADIKANSH</div>
+
+  <div class="wrapper" id="app">
+    <header>
+      <div class="title">
+        <h1>To My Forever Promises</h1>
+        <p>Each page is a memory — a promise — a piece of my heart and it will be go on till eternity.</p>
+      </div>
+
+      <!-- small audio control -->
+      <div style="display:flex;align-items:center;gap:12px;">
+        <audio id="bgAudio" preload="auto" src="love-song.mp3" loop></audio>
+        <button class="btn ghost" id="playBtn" onclick="toggleAudio()">Play ♫</button>
+      </div>
+    </header>
+
+    <!-- dynamic postcard area -->
+    <main id="cardArea">
+      <!-- Card template will be injected here by JS -->
+    </main>
+
+    <!-- Controls -->
+    <div class="controls" style="margin-top:18px;">
+      <div class="nav">
+        <button class="btn ghost" id="prevBtn" onclick="prevCard()" aria-label="Previous">← Previous</button>
+        <button class="btn" id="nextBtn" onclick="nextCard()">Next →</button>
+      </div>
+
+      <div class="progress" aria-hidden="true">
+        <div id="pageText"> -> </div>
+        <div class="dots" id="dots"></div>
+      </div>
+    </div>
+
+    <footer>
+      <div style="font-size:13px; color:var(--muted);">Made with all my heart for you. <span class="hearts">💖</span></div>
+    </footer>
+  </div>
+
+<script>
+/* --- DATA: 20 postcards (photos placeholders and romantic text) --- */
+/* Replace "images/IMAGE1.jpg" etc with your real image paths */
+const cards = [
+  {
+    img: "images/IMAGE1.jpg",
+    title: "Promise — A safe heaven, resting of your heart peacefully.",
+    desc: "A divine love story that transcends time and space, where two souls find solace in each other's embrace. I promise to be your safe haven, a sanctuary where your heart can rest peacefully, knowing it is cherished and protected."
+  },
+  {
+    img: "images/IMAGE2.jpg",
+    title: "Promise - Listen you fully, even when words are heavy, confusing, or difficult to express.",
+    desc: "In the symphony of our love, I vow to be your attentive listener, embracing every word you share, even when they are heavy with emotion or difficult to express. Your voice will always find a safe space in my heart."
+  },
+  {
+    img: "images/IMAGE3.jpg",
+    title: "Promise — Hold your hand every single day, through all of life’s adventures and never leave alone.",
+    desc: "With unwavering devotion, I promise to hold your hand through every twist and turn of life's journey. Together, we will navigate the adventures that await us, never leaving each other alone in the face of challenges or triumphs."
+  },
+  {
+    img: "images/IMAGE4.jpg",
+    title: "Promise - stay especially on the days when love needs patience, understanding, and gentle care.",
+    desc: "Love is a delicate dance, and I promise to stay by your side, especially on the days when it requires patience, understanding, and gentle care. Together, we will nurture our bond with tenderness and unwavering support."
+  },
+  {
+    img: "images/IMAGE5.jpg",
+    title: "Promise — Choose you, every day, in small ways and big ways, for all the days of our lives.",
+    desc: "In the tapestry of our love, I vow to choose you every single day, in both small gestures and grand declarations. For all the days of our lives, my heart will consistently and lovingly select you as my partner, my confidant, and my forever love."
+  },
+  {
+    img: "images/IMAGE6.jpg",
+    title: "Promise — Protect softness of heart cause its rare and precious.",
+    desc: "Your heart is a rare and precious gem, and I promise to protect its softness with unwavering care. I will cherish the vulnerability that makes you uniquely you, ensuring that your tender spirit remains safe and nurtured in our love."
+  },
+  {
+    img: "images/IMAGE7.jpg",
+    title: "Promise — keep learning you and growing with you, hand in hand through every season of life.",
+    desc: "Our love is a journey of continuous growth and discovery. I promise to keep learning about you, embracing the evolving seasons of life hand in hand. Together, we will navigate the changes, celebrating each chapter with open hearts and unwavering support."
+  },
+  {
+    img: "images/IMAGE8.jpg",
+    title: "Promise — Respect feelings even when they are different from mine",
+    desc: "I promise to honor and respect your feelings, even when they differ from my own. Our love thrives in the space of understanding and acceptance, where every emotion you experience is valued and cherished as an integral part of our shared journey."
+  },
+  {
+    img: "images/IMAGE9.jpg",
+    title: "Promise — Speak to you with kindness and listen with an open heart.",
+    desc: "Even in small disagreements, I promise to speak to you with kindness and listen with an open heart. Our love will be a sanctuary of gentle communication, where understanding and compassion guide our words and actions."
+  },
+  {
+    img: "images/IMAGE10.jpg",
+    title: "Promise — Heal you on your hard days with laughter and lightness.",
+    desc: "On your hard days, I promise to be the light that brings laughter and joy into your life. Together, we will find healing in the simple moments of happiness, creating a sanctuary of love where your spirit can soar even in the face of challenges."
+  },
+  {
+    img: "images/IMAGE11.jpg",
+    title: "Promise — Gently loyal and true, through all of life’s changes.",
+    desc: "In the ever-changing landscape of life, I promise to be gently loyal and true to you. Our love will be a steadfast anchor, unwavering in its devotion, as we navigate the twists and turns of our journey together."
+  },
+  {
+    img: "images/IMAGE12.jpg",
+    title: "Promise — Make our home a place of peace, warmth, laughter, and love.",
+    desc: "Every corner of our home will be filled with love and warmth. Full of joy everyday. Complete laughter and peace too."
+  },
+  {
+    img: "images/IMAGE13.jpg",
+    title: "Promise — Share responsibilties, small tasks to big dreams, as partners in life.",
+    desc: "From small tasks to big dreams, I promise to share responsibilities with you as equal partners in life. Together, we will build a foundation of support and collaboration, nurturing our love through every endeavor we undertake."
+  },
+  {
+    img: "images/IMAGE14.jpg",
+    title: "Promise — Keep Adventuring our life together for miles to come.",
+    desc: "Our life will stay curious — with short drives, slow walks, and big dreams that pull us gently toward the unknown together."
+  },
+  {
+    img: "images/IMAGE15.jpg",
+    title: "Promise — never stop for reason of smiling with the nodes completely drenched in love.",
+    desc: "In every moment, together, we will find smiling faces of each other even in extraordinary days where we are busy or even in simple lazy days as well."
+  },
+  {
+    img: "images/IMAGE16.jpg",
+    title: "Promise — Always stand beside you and remind you that I am here.",
+    desc: "No matter what life brings, I promise to always stand beside you, a steadfast presence reminding you that you are never alone. Together, we will face every challenge and celebrate every triumph, hand in hand."
+  },
+  {
+    img: "images/IMAGE17.jpg",
+    title: "Promise — Grow old with you till eternity.",
+    desc: "We will honor the little rituals that matter — tea at dawn, songs for festivals, quiet prayers at dusk. I promise to celebrate with you."
+  },
+  {
+    img: "images/IMAGE18.jpg",
+    title: "Promise — Keeping same beliefs and values to make comfort for each other.",
+    desc: "No foolishness, no pretenses — just us, being real, being kind, being in love. I promise to keep our beliefs and values aligned, creating a comforting space where our love can flourish."
+  },
+  {
+    img: "images/IMAGE19.jpg",
+    title: "Promise #19 — Forever Partner (INFINTY)",
+    desc: "I promise to be your equal partner — in work, in dreams, in parenting, in everything. Together we will share the weight and the wonders."
+  },
+  {
+    img: "images/IMAGE20.jpg",
+    title: "Promise — Until My Last Breath love you.",
+    desc: "I promise to love you deeply — with a heart that remembers the first time and vows to keep saying 'I love you' in new ways every day."
+  }
+];
+
+/* state */
+let idx = 0;
+
+/* DOM refs */
+const cardArea = document.getElementById('cardArea');
+const pageText = document.getElementById('pageText');
+const dotsContainer = document.getElementById('dots');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const audio = document.getElementById('bgAudio');
+const playBtn = document.getElementById('playBtn');
+
+/* render initial dots */
+function renderDots(){
+  dotsContainer.innerHTML = '';
+  for(let i=0;i<cards.length;i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===idx ? ' active' : '');
+    d.title = `Page ${i+1}`;
+    d.addEventListener('click',()=>{ goTo(i); });
+    dotsContainer.appendChild(d);
+  }
+}
+
+/* render card */
+function renderCard(){
+  const data = cards[idx];
+  // page text
+  pageText.textContent = `${idx+1} / ${cards.length}`;
+
+  // card content
+  cardArea.innerHTML = `
+    <section class="card page-enter page-enter-active" id="card_${idx}">
+      <div class="media">
+        <img src="${data.img}" alt="Promise ${idx+1} photo" onerror="this.style.objectPosition='center'; this.src='https://via.placeholder.com/1200x900?text=Add+Your+Photo'">
+      </div>
+
+      <div class="content">
+        <div class="promise-number">Promise ${(idx+1)}</div>
+        <h2 class="promise-title">${escapeHtml(data.title)}</h2>
+        <p class="promise-desc">${escapeHtml(data.desc)}</p>
+        <div style="margin-top:16px; display:flex; gap:10px; align-items:center;">
+          <div class="small-note">Photo ${idx+1} • A memory saved for us</div>
+        </div>
+      </div>
+    </section>
+  `;
+
+  // update navigation state
+  prevBtn.disabled = idx===0;
+  nextBtn.textContent = idx===cards.length-1 ? 'Finish ♥' : 'Next →';
+  renderDots();
+}
+
+/* helpers */
+function escapeHtml(s){ return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+/* navigation */
+function nextCard(){
+  if(idx < cards.length-1){ idx++; renderCard(); } else { showFinal(); }
+}
+function prevCard(){
+  if(idx>0){ idx--; renderCard(); }
+}
+function goTo(i){ if(i>=0 && i<cards.length){ idx = i; renderCard(); } }
+
+/* final message screen */
+function showFinal(){
+  cardArea.innerHTML = `
+    <section class="final">
+      <h2>Forever Yours — A final promise</h2>
+      <p>
+        Every page you read today is a little piece of what I carry for you every day. I promise that the rest of my life will be spent making the ordinary feel sacred — with warm mornings, whispered jokes, and hands that never let go.
+        You are the song I want on repeat, the quiet I come home to, and the brave dream I am lucky to pursue. May this small album remind you of how deeply and gently you are loved — today, tomorrow, forever.
+        A gentle song for you click the above Play button and enjoy ♥
+      </p>
+    </section>
+  `;
+  // update progress
+  pageText.textContent = `${cards.length} / ${cards.length}`;
+  dotsContainer.innerHTML = '';
+  prevBtn.disabled = false;
+  nextBtn.textContent = 'Restart';
+  nextBtn.onclick = () => { idx=0; renderCard(); nextBtn.onclick = nextCard; };
+}
+
+/* audio controls */
+let playing = false;
+function toggleAudio(){
+  if(!playing){
+    audio.play().catch(e => console.log('autoplay blocked', e));
+    playBtn.textContent = 'Pause ♫';
+    playing = true;
+  } else {
+    audio.pause();
+    playBtn.textContent = 'Play ♫';
+    playing = false;
+  }
+}
+
+/* keyboard navigation */
+document.addEventListener('keydown',(e)=>{
+  if(e.key === 'ArrowRight' || e.key === 'Enter') nextCard();
+  if(e.key === 'ArrowLeft') prevCard();
+});
+
+/* initial render */
+renderCard();
+renderDots();
+
+</script>
+
+</body>
+</html>
